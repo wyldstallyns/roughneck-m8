@@ -304,7 +304,8 @@ static void led_work (struct work_struct *work)
 		changed++;
 	}
 	if (changed)
-		schedule_delayed_work(&hub->leds, LED_CYCLE_PERIOD);
+		queue_delayed_work(system_power_efficient_wq,
+				&hub->leds, LED_CYCLE_PERIOD);
 }
 
 #define	USB_STS_TIMEOUT		1000
@@ -655,7 +656,8 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
 				goto init2;
 #endif
 			PREPARE_DELAYED_WORK(&hub->init_work, hub_init_func2);
-			schedule_delayed_work(&hub->init_work,
+			queue_delayed_work(system_power_efficient_wq,
+					&hub->init_work,
 					msecs_to_jiffies(delay));
 
 			
@@ -766,7 +768,8 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
 		
 		if (type == HUB_INIT2) {
 			PREPARE_DELAYED_WORK(&hub->init_work, hub_init_func3);
-			schedule_delayed_work(&hub->init_work,
+			queue_delayed_work(system_power_efficient_wq,
+					&hub->init_work,
 					msecs_to_jiffies(delay));
 			return;		
 		} else {
@@ -780,7 +783,8 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
 	if (status < 0)
 		dev_err(hub->intfdev, "activate --> %d\n", status);
 	if (hub->has_indicators && blinkenlights)
-		schedule_delayed_work(&hub->leds, LED_CYCLE_PERIOD);
+		queue_delayed_work(system_power_efficient_wq,
+				&hub->leds, LED_CYCLE_PERIOD);
 
 	
 	kick_khubd(hub);
@@ -2735,7 +2739,8 @@ check_highspeed (struct usb_hub *hub, struct usb_device *udev, int port1)
 		
 		if (hub->has_indicators) {
 			hub->indicator[port1-1] = INDICATOR_GREEN_BLINK;
-			schedule_delayed_work (&hub->leds, 0);
+			queue_delayed_work(system_power_efficient_wq,
+					&hub->leds, 0);
 		}
 	}
 	kfree(qual);
@@ -2923,7 +2928,9 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
 				if (hub->has_indicators) {
 					hub->indicator[port1-1] =
 						INDICATOR_AMBER_BLINK;
-					schedule_delayed_work (&hub->leds, 0);
+					queue_delayed_work(
+						system_power_efficient_wq,
+						&hub->leds, 0);
 				}
 				status = -ENOTCONN;	
 				goto loop_disable;
