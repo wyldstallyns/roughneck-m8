@@ -1123,8 +1123,8 @@ static int ngd_slim_rx_msgq_thread(void *data)
 
 	while (!kthread_should_stop()) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		wait_for_completion(notify);
-		
+		wait_for_completion_interruptible(notify);
+		/* 1 irq notification per message */
 		if (dev->use_rx_msgqs != MSM_MSGQ_ENABLED) {
 			msm_slim_rx_dequeue(dev, (u8 *)buffer);
 			ngd_slim_rx(dev, (u8 *)buffer);
@@ -1170,14 +1170,8 @@ static int ngd_notify_slaves(void *data)
 
 	while (!kthread_should_stop()) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		ret = wait_for_completion_timeout(&dev->qmi.slave_notify,
-								HZ);
-		if (!ret) {
-			dev_dbg(dev->dev, "slave thread wait err:%d", ret);
-			continue;
-
-		}
-		
+		wait_for_completion_interruptible(&dev->qmi.slave_notify);
+		/* Probe devices for first notification */
 		if (!i) {
 			i++;
 			dev->err = 0;
