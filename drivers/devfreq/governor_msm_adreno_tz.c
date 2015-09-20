@@ -34,6 +34,9 @@ static DEFINE_SPINLOCK(tz_lock);
 #define TARGET			80
 #define CAP			75
 
+#define BUSY_BIN		95
+#define LONG_FRAME		25000
+
 #define CEILING			50000
 #define TZ_RESET_ID		0x3
 #define TZ_UPDATE_ID		0x4
@@ -92,6 +95,7 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 	int act_level;
 	int norm_cycles;
 	int gpu_percent;
+	static int busy_bin, frame_flag;
 
 	memset(&b, 0, sizeof(b));
 
@@ -129,6 +133,15 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 		return 0;
 	}
 
+	if ((stats.busy_time * 100 / stats.total_time) > BUSY_BIN) {
+		busy_bin += stats.busy_time;
+		if (stats.total_time > LONG_FRAME)
+			frame_flag = 1;
+	} else {
+		busy_bin = 0;
+		frame_flag = 0;
+	}
+	
 	level = devfreq_get_freq_level(devfreq, stats.current_frequency);
 
 	if (level < 0) {
@@ -136,8 +149,11 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 		return level;
 	}
 
-	if (priv->bin.busy_time > CEILING) {
+	if (priv->bin.busy_time > CEILING ||
+		(busy_bin > CEILING && frame_flag)) {
 		val = -1 * level;
+		busy_bin = 0;
+		frame_flag = 0;
 	} else {
 #ifdef CONFIG_SIMPLE_GPU_ALGORITHM
 		if (simple_gpu_active != 0)
