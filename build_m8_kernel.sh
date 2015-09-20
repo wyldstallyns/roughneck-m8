@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to build your kernel
-  k=~/roughneck-m8
+  k=~/kernel/m8gpe51
 # Directory for the any kernel updater
    t=$k/packages
 # Date to add to zip
