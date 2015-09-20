@@ -38,6 +38,7 @@
 #include <mach/htc_footprint.h>
 #include <mach/clk-provider.h>
 #endif
+#include <mach/cpufreq.h>
 
 #include "acpuclock.h"
 
