@@ -1068,7 +1068,7 @@ static int taiko_config_compander(struct snd_soc_dapm_widget *w,
 		
 		snd_soc_update_bits(codec,
 				    TAIKO_A_CDC_COMP0_FS_CFG + (comp * 8),
-				    0x07, rate)
+				    0x07, rate);
 		/* Set the static gain offset for HPH Path */
 		if (comp == COMPANDER_1) {
 			if (buck_mv == WCD9XXX_CDC_BUCK_MV_2P15) {
