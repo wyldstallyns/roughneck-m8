@@ -34,6 +34,7 @@ extern unsigned long msm_cpufreq_get_bw(void)
 {
 	return ULONG_MAX;
 }
+#endif
 
 #define MSM_CPUFREQ_NO_LIMIT 0xFFFFFFFF
 
@@ -59,8 +60,6 @@ static inline int msm_cpufreq_set_freq_limits(
 {
 	return -ENOSYS;
 }
-#endif
-
 #endif
 
 #endif
