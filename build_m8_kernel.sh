@@ -58,12 +58,12 @@ make -j`grep 'processor' /proc/cpuinfo | wc -l` CROSS_COMPILE=$TOOLCHAIN #>> com
    cp $k/boot.img out/$c/boot.img
 
 # Clean up
-   rm -rf $k/boot.img-dtb
-   rm -rf $k/boot.img-kernel
-   rm -rf $k/boot.img-ramdisk.gz
-   rm -rf $k/zImage
-   rm -rf $k/dt.img
-   rm -rf $k/arch/arm/boot/dt.img
+#   rm -rf $k/boot.img-dtb
+#   rm -rf $k/boot.img-kernel
+#   rm -rf $k/boot.img-ramdisk.gz
+#   rm -rf $k/zImage
+#   rm -rf $k/dt.img
+#   rm -rf $k/arch/arm/boot/dt.img
    
 # Build Zip
  clear
