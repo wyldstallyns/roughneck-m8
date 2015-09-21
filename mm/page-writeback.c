@@ -37,6 +37,11 @@
 #include <linux/mm_inline.h>
 #include <trace/events/writeback.h>
 
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+static struct notifier_block writeback_state_notif;
+#endif
+
 #include "internal.h"
 
 #define MAX_PAUSE		max(HZ/5, 1)
@@ -60,11 +65,21 @@ int vm_dirty_ratio = 20;
 
 unsigned long vm_dirty_bytes;
 
-unsigned int dirty_writeback_interval = 5 * 100; 
+#define DEFAULT_DIRTY_WRITEBACK_INTERVAL 500 /* centiseconds */
+#define DEFAULT_SUSPEND_DIRTY_WRITEBACK_INTERVAL 1000 /* centiseconds */
+unsigned int dirty_writeback_interval,
+	resume_dirty_writeback_interval;
+unsigned int sleep_dirty_writeback_interval,
+	suspend_dirty_writeback_interval;
 
 EXPORT_SYMBOL_GPL(dirty_writeback_interval);
 
-unsigned int dirty_expire_interval = 30 * 100; 
+#define DEFAULT_DIRTY_EXPIRE_INTERVAL 3000 /* centiseconds */
+#define DEFAULT_SUSPEND_DIRTY_EXPIRE_INTERVAL 6000 /* centiseconds */
+unsigned int dirty_expire_interval,
+	resume_dirty_expire_interval;
+unsigned int sleep_dirty_expire_interval,
+	suspend_dirty_expire_interval;
 
 int block_dump;
 
@@ -977,9 +992,48 @@ static struct notifier_block __cpuinitdata ratelimit_nb = {
 	.next		= NULL,
 };
 
+#ifdef CONFIG_STATE_NOTIFIER
+static int state_notifier_callback(struct notifier_block *this,
+				unsigned long event, void *data)
+{
+	switch (event) {
+		case STATE_NOTIFIER_ACTIVE:
+			dirty_writeback_interval =
+				resume_dirty_writeback_interval;
+			dirty_expire_interval = resume_dirty_expire_interval;
+			break;
+		case STATE_NOTIFIER_SUSPEND:
+			dirty_writeback_interval =
+				suspend_dirty_writeback_interval;
+			dirty_expire_interval = suspend_dirty_expire_interval;
+			break;
+		default:
+			break;
+	}
+
+	return NOTIFY_OK;
+}
+#endif
+
 void __init page_writeback_init(void)
 {
 	int shift;
+	
+	dirty_writeback_interval = resume_dirty_writeback_interval =
+		DEFAULT_DIRTY_WRITEBACK_INTERVAL;
+	dirty_expire_interval = resume_dirty_expire_interval =
+		DEFAULT_DIRTY_EXPIRE_INTERVAL;
+	sleep_dirty_writeback_interval = suspend_dirty_writeback_interval =
+		DEFAULT_SUSPEND_DIRTY_WRITEBACK_INTERVAL;
+	sleep_dirty_expire_interval = suspend_dirty_expire_interval =
+		DEFAULT_SUSPEND_DIRTY_EXPIRE_INTERVAL;
+
+#ifdef CONFIG_STATE_NOTIFIER
+	writeback_state_notif.notifier_call = state_notifier_callback;
+	if (state_register_client(&writeback_state_notif))
+		pr_err("%s: Failed to register State notifier callback\n",
+			__func__);
+#endif
 
 	writeback_set_ratelimit();
 	register_cpu_notifier(&ratelimit_nb);
