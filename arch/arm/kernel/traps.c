@@ -473,7 +473,7 @@ static int bad_syscall(int n, struct pt_regs *regs)
 
 static long do_cache_op_restart(struct restart_block *);
 
-static inline void
+static inline int
 __do_cache_op(unsigned long start, unsigned long end)
 {
 	int ret;
@@ -525,7 +525,7 @@ do_cache_op(unsigned long start, unsigned long end, int flags)
 {
 
 	if (end < start || flags)
-		return;
+		return -EINVAL;
 
 	if (!access_ok(VERIFY_READ, start, end - start))
 		return -EFAULT;
@@ -558,8 +558,7 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
 		return regs->ARM_r0;
 
 	case NR(cacheflush):
-		do_cache_op(regs->ARM_r0, regs->ARM_r1, regs->ARM_r2);
-		return 0;
+		return do_cache_op(regs->ARM_r0, regs->ARM_r1, regs->ARM_r2);
 
 	case NR(usr26):
 		if (!(elf_hwcap & HWCAP_26BIT))
