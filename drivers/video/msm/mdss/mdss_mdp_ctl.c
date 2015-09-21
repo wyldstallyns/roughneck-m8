@@ -22,8 +22,7 @@
 
 #include "mdss_fb.h"
 #include "mdss_mdp.h"
-#include "mdss_mdp_trace.h"
-#include "mdss_debug.h"
+#include <trace/mdss_mdp_trace.h>
 
 #include "mdss_dsi.h"
 #include "mdss_htc_util.h"
