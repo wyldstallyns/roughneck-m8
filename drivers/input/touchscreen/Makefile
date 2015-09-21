@@ -91,4 +91,4 @@ endif
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI4)		+= synaptics_i2c_rmi4.o
 obj-$(CONFIG_TOUCHSCREEN_GT9XX)		+= gt9xx/
 obj-$(CONFIG_STATE_NOTIFIER)		+= state_notifier.o 
-
+obj-y += touchboost.o
