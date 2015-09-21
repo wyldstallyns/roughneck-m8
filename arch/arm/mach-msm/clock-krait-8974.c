@@ -35,6 +35,15 @@
 #include "clock-krait.h"
 #include "clock.h"
 
+#ifdef CONFIG_PVS_LEVEL_INTERFACE
+int pvs_level = -1;
+module_param(pvs_level, int, S_IRUGO); 
+#endif
+#ifdef CONFIG_SPEED_LEVEL_INTERFACE
+int speed_level = -1;
+module_param(speed_level, int, S_IRUGO);
+#endif
+
 #ifdef CONFIG_HTC_POWER_DEBUG
 #include <linux/debugfs.h>
 #endif
@@ -482,6 +491,9 @@ static void get_krait_bin_format_b(struct platform_device *pdev,
 		*speed = 0;
 	}
 
+#ifdef CONFIG_SPEED_LEVEL_INTERFACE
+        speed_level = *speed;
+#endif
 	
 	pte_efuse = readl_relaxed(base + 0x4) & BIT(21);
 	if (pte_efuse) {
@@ -491,6 +503,10 @@ static void get_krait_bin_format_b(struct platform_device *pdev,
 		*pvs = 0;
 	}
 
+#ifdef CONFIG_PVS_LEVEL_INTERFACE
+	pvs_level = *pvs;
+#endif
+	
 	dev_info(&pdev->dev, "PVS version: %d\n", *pvs_ver);
 
 	devm_iounmap(&pdev->dev, base);
