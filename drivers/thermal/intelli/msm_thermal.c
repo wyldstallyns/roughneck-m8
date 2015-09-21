@@ -41,7 +41,7 @@
 #include <mach/rpm-regulator-smd.h>
 #include <linux/regulator/consumer.h>
 #include <linux/msm_thermal_ioctl.h>
-#include <soc/qcom/rpm-smd.h>
+#include <mach/rpm-smd.h>
 #include <soc/qcom/scm.h>
 
 #define MAX_RAILS 5
