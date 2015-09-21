@@ -37,7 +37,7 @@ static int orig_up_threshold = 90;
 static int g_count = 0;
 
 #define DEF_SAMPLING_RATE			(30000)
-#define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(10)
+#define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(3)
 #define DEF_FREQUENCY_UP_THRESHOLD		(90)
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
 #define MAX_SAMPLING_DOWN_FACTOR		(100000)
@@ -47,12 +47,13 @@ static int g_count = 0;
 #define MIN_FREQUENCY_UP_THRESHOLD		(11)
 #define MAX_FREQUENCY_UP_THRESHOLD		(100)
 #define MIN_FREQUENCY_DOWN_DIFFERENTIAL		(1)
-#define UI_DYNAMIC_SAMPLING_RATE		(15000)
+#define UI_DYNAMIC_SAMPLING_RATE		(30000)
 #define DBS_SWITCH_MODE_TIMEOUT			(1000)
 #define INPUT_EVENT_MIN_TIMEOUT 		(0)
 #define INPUT_EVENT_MAX_TIMEOUT 		(3000)
 #define INPUT_EVENT_TIMEOUT			(500)
 #define MIN_SAMPLING_RATE_RATIO			(2)
+#define DEF_OPTIMAL_FREQ			(300000)
 
 static unsigned int min_sampling_rate;
 static unsigned int skip_slim = 0;
@@ -81,10 +82,10 @@ struct cpufreq_governor cpufreq_gov_slim = {
 enum {DBS_NORMAL_SAMPLE, DBS_SUB_SAMPLE};
 
 struct cpu_dbs_info_s {
-	cputime64_t prev_cpu_idle;
-	cputime64_t prev_cpu_iowait;
-	cputime64_t prev_cpu_wall;
-	cputime64_t prev_cpu_nice;
+	u64 prev_cpu_idle;
+	u64 prev_cpu_iowait;
+	u64 prev_cpu_wall;
+	u64 prev_cpu_nice;
 	struct cpufreq_policy *cur_policy;
 	struct delayed_work work;
 	struct cpufreq_frequency_table *freq_table;
@@ -156,7 +157,7 @@ static struct dbs_tuners {
 	.ignore_nice = 0,
 	.powersave_bias = 0,
 	.sync_freq = 0,
-	.optimal_freq = 0,
+	.optimal_freq = DEF_OPTIMAL_FREQ,
 	.io_is_busy = 1,
 	.two_phase_freq = 0,
 	.ui_sampling_rate = UI_DYNAMIC_SAMPLING_RATE,
@@ -164,7 +165,7 @@ static struct dbs_tuners {
 	.gboost = 1,
 };
 
-static inline cputime64_t get_cpu_iowait_time(unsigned int cpu, cputime64_t *wall)
+static inline u64 get_cpu_iowait_time(unsigned int cpu, u64 *wall)
 {
 	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
 
@@ -938,7 +939,7 @@ static unsigned int get_cpu_current_load(unsigned int j, unsigned int *record)
 {
 	unsigned int cur_load = 0;
 	struct cpu_dbs_info_s *j_dbs_info;
-	cputime64_t cur_wall_time, cur_idle_time, cur_iowait_time;
+	u64 cur_wall_time, cur_idle_time, cur_iowait_time;
 	unsigned int idle_time, wall_time, iowait_time;
 
 	j_dbs_info = &per_cpu(od_cpu_dbs_info, j);
