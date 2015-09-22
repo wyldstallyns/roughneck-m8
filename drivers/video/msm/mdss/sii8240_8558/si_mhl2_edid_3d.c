@@ -2063,12 +2063,11 @@ uint8_t i;
 									Pcolorimetry_data_payload_t p_payload= &p_colorimetry_data_block->payload;
 									mhl_edid_3d_data->parse_data.colorimetry_support_flags = p_payload->ci_data.xvYCC;
 									mhl_edid_3d_data->parse_data.meta_data_profile         = p_payload->cm_meta_data.meta_data;
-								}
-
 								MHL_TX_EDID_INFO(mhl_edid_3d_data->dev_context,
 										"EDID -> Short Descriptor Colorimetry Block\n");
+								}
+								break;	
 						}
-								break;
 					}
 
 					break;
