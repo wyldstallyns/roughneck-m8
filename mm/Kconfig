@@ -234,6 +234,7 @@ config MMU_NOTIFIER
 
 config KSM
 	bool "Enable KSM for page merging"
+	default y
 	depends on MMU
 	help
 	  Enable Kernel Samepage Merging: KSM periodically scans those areas
@@ -255,7 +256,7 @@ config KSM_HTC_POLICY
 config KSM_CHECK_PAGE
 	bool "Check page before scanning"
 	depends on KSM
-	default n
+	default y
 	help
 	  If enabled, this will check and skip if page is already scanned in
 	  same KSM scan cycle.
