@@ -172,7 +172,7 @@ static irqreturn_t arch_timer_handler_mem(int irq, void *dev_id)
 	return arch_timer_handler(0, dev_id);
 }
 
-static inline void arch_timer_set_mode(int cp15, typedef enum clock_event_mode mode,
+static inline void arch_timer_set_mode(int cp15, enum clock_event_mode mode,
 				struct clock_event_device *clk)
 {
 	unsigned long ctrl;
