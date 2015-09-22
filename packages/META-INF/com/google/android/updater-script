@@ -17,5 +17,5 @@ package_extract_file("boot.img", "/dev/block/platform/msm_sdcc.1/by-name/boot");
 ui_print("Running FSTRIM might take a while");
 run_program("/system/bin/fstrim", "-v", "/system");
 
-ui_print("All Set... Enjoy!");
+ui_print("Welcome to the Roughnecks! Rico's Roughnecks!");
 show_progress(0.100000, 0);
