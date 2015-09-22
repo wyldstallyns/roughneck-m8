@@ -198,7 +198,6 @@ static int devfreq_simple_ondemand_handler(struct devfreq *devfreq,
 	return ret;
 }
 
-#ifdef CONFIG_LGE_DEVFREQ_DFPS
 static ssize_t store_upthreshold(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -292,16 +291,13 @@ static int simpleondemand_init(struct devfreq *devfreq){
 static void simpleondemand_exit(struct devfreq *devfreq){
 	sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
 }
-#endif
 
 static struct devfreq_governor devfreq_simple_ondemand = {
 	.name = DEVFREQ_SIMPLE_ONDEMAND,
 	.get_target_freq = devfreq_simple_ondemand_func,
 	.event_handler = devfreq_simple_ondemand_handler,
-#ifdef CONFIG_LGE_DEVFREQ_DFPS
 	.init = simpleondemand_init,
 	.exit = simpleondemand_exit,
-#endif
 };
 
 static int __init devfreq_simple_ondemand_init(void)
