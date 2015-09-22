@@ -1054,7 +1054,7 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 	pwr->thermal_pwrlevel = 0;
 
 	pwr->active_pwrlevel = pdata->init_level;
-	pwr->default_pwrlevel = pdata->init_level;
+	pwr->default_pwrlevel = pwr->min_pwrlevel;
 	pwr->init_pwrlevel = pdata->init_level;
 	for (i = 0; i < pdata->num_levels; i++) {
 		pwr->pwrlevels[i].gpu_freq =
@@ -1501,9 +1501,12 @@ EXPORT_SYMBOL(kgsl_pwrctrl_disable);
 
 void kgsl_pwrctrl_set_state(struct kgsl_device *device, unsigned int state)
 {
+	struct kgsl_pwrscale *pwrscale = &device->pwrscale;
+	
 	trace_kgsl_pwr_set_state(device, state);
 	device->state = state;
 	device->requested_state = KGSL_STATE_NONE;
+	pwrscale->devfreqptr->state = state;
 }
 EXPORT_SYMBOL(kgsl_pwrctrl_set_state);
 
