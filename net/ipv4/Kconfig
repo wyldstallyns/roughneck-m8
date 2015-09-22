@@ -417,6 +417,7 @@ config INET_UDP_DIAG
 
 menuconfig TCP_CONG_ADVANCED
 	bool "TCP: advanced congestion control"
+	default y
 	---help---
 	  Support for selection of various TCP congestion control
 	  modules.
