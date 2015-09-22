@@ -269,6 +269,19 @@ static int tz_start(struct devfreq *devfreq)
 	unsigned int tz_pwrlevels[MSM_ADRENO_MAX_PWRLEVELS + 1];
 	unsigned int t1, t2 = 2 * HIST;
 	int i, out, ret;
+	
+	struct msm_adreno_extended_profile *ext_profile = container_of(
+					(devfreq->profile),
+					struct msm_adreno_extended_profile,
+					profile);
+
+	/*
+	 * Assuming that we have only one instance of the adreno device
+	 * connected to this governor,
+	 * can safely restore the pointer to the governor private data
+	 * from the container of the device profile
+	 */
+	devfreq->data = ext_profile->private_data;
 
 	priv = devfreq->data;
 	priv->nb.notifier_call = tz_notify;
