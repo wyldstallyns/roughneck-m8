@@ -26,7 +26,7 @@
   m=$k/out/$c/system/lib/modules
   z=$c-$today
 
-TOOLCHAIN=/home/jenny/arm-cortex_a15-linux-gnueabihf/bin/arm-cortex_a15-linux-gnueabihf-
+TOOLCHAIN=/home/jenny/arm-eabi-5.2/bin/
 export ARCH=arm
 export SUBARCH=arm
 
