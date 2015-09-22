@@ -274,7 +274,7 @@ config SND_SOC_MDM9625
 
 config HD_AUDIO
     tristate "HD Audio"
-    default n
+    default y
     help
 	 To add support for 64/88.2/96/176.4/192kHz Audio.
 
