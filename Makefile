@@ -376,6 +376,7 @@ KBUILD_CFLAGS 	:= -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks \
 		   -Wno-sizeof-pointer-memaccess \
+		   -Wswitch-enum \
 		    $(KERNELFLAGS)
 
 KBUILD_AFLAGS_KERNEL :=
