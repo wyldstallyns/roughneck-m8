@@ -17,7 +17,7 @@
 /* We want to use full resolution of the CPU timer: 2**-12 micro-seconds. */
 
 typedef unsigned long long __nocast cputime_t;
-typedef unsigned long long __nocast cputime64_t;
+typedef unsigned long long __nocast u64;
 
 static inline unsigned long __div(unsigned long long n, unsigned long base)
 {
@@ -47,16 +47,16 @@ static inline cputime_t jiffies_to_cputime(const unsigned int jif)
 	return (__force cputime_t)(jif * (4096000000ULL / HZ));
 }
 
-static inline u64 cputime64_to_jiffies64(cputime64_t cputime)
+static inline u64 cputime64_to_jiffies64(u64 cputime)
 {
 	unsigned long long jif = (__force unsigned long long) cputime;
 	do_div(jif, 4096000000ULL / HZ);
 	return jif;
 }
 
-static inline cputime64_t jiffies64_to_cputime64(const u64 jif)
+static inline u64 jiffies64_to_cputime64(const u64 jif)
 {
-	return (__force cputime64_t)(jif * (4096000000ULL / HZ));
+	return (__force u64)(jif * (4096000000ULL / HZ));
 }
 
 /*
@@ -159,7 +159,7 @@ static inline cputime_t clock_t_to_cputime(unsigned long x)
 /*
  * Convert cputime64 to clock.
  */
-static inline clock_t cputime64_to_clock_t(cputime64_t cputime)
+static inline clock_t cputime64_to_clock_t(u64 cputime)
 {
 	unsigned long long clock = (__force unsigned long long) cputime;
 	do_div(clock, 4096000000ULL / USER_HZ);
@@ -177,7 +177,7 @@ struct s390_idle_data {
 
 DECLARE_PER_CPU(struct s390_idle_data, s390_idle);
 
-cputime64_t s390_get_idle_time(int cpu);
+u64 s390_get_idle_time(int cpu);
 
 #define arch_idle_time(cpu) s390_get_idle_time(cpu)
 
