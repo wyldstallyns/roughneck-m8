@@ -858,19 +858,19 @@ static int __init logger_init(void)
 			__func__);
 #endif
 
-	ret = create_log(log_main, LOGGER_LOG_MAIN, 32*1024);
+	ret = create_log(LOGGER_LOG_MAIN, 32*1024);
 	if (unlikely(ret))
 		goto out;
 
-	ret = create_log(log_events, LOGGER_LOG_EVENTS, 32*1024);
+	ret = create_log(LOGGER_LOG_EVENTS, 32*1024);
 	if (unlikely(ret))
 		goto out;
 
-	ret = create_log(log_radio, LOGGER_LOG_RADIO, 32*1024);
+	ret = create_log(LOGGER_LOG_RADIO, 32*1024);
 	if (unlikely(ret))
 		goto out;
 
-	ret = create_log(log_system, LOGGER_LOG_SYSTEM, 32*1024);
+	ret = create_log(LOGGER_LOG_SYSTEM, 32*1024);
 	if (unlikely(ret))
 		goto out;
 
