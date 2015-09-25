@@ -42,7 +42,7 @@ void kmalloc_count(struct page *page, int to_alloc)
 }
 
 struct super_block;
-extern int sb_is_blkdev_sb(struct super_block *sb);
+static int sb_is_blkdev_sb(struct super_block *sb);
 
 static inline int page_is_cached(struct page *page)
 {
