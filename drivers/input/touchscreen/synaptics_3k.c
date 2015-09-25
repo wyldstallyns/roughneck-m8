@@ -318,7 +318,7 @@ static int synaptics_ts_suspend(struct device *dev);
 #define WAKE_MOTION 0x07
 #define WAKE_MOTION_HIDI 0x0b
 
-static cputime64_t prev_time;
+static u64 prev_time;
 static int dt_prev_x = 0, dt_prev_y = 0;
 static int last_touch_position_x = 0, last_touch_position_y = 0;
 static unsigned long pwrtrigger_time[2] = {0, 0};
@@ -427,7 +427,7 @@ static void reset_dt2w(void)
         dt_prev_y = 0;
 }
 
-static void dt2w_func(int x, int y, cputime64_t trigger_time)
+static void dt2w_func(int x, int y, u64 trigger_time)
 {
 	if (phone_call_stat == 1)
 		return;
@@ -2924,7 +2924,7 @@ static void synaptics_ts_finger_func(struct synaptics_ts_data *ts)
 	static int x_pos[10] = {0}, y_pos[10] = {0};
 
 #ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_WAKE_GESTURES
- 	cputime64_t dt_trigger_time;
+ 	u64 dt_trigger_time;
 #endif
 
 	memset(buf, 0x0, sizeof(buf));
