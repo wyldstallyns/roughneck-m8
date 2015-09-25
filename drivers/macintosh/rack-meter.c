@@ -50,8 +50,8 @@ struct rackmeter_dma {
 struct rackmeter_cpu {
 	struct delayed_work	sniffer;
 	struct rackmeter	*rm;
-	cputime64_t		prev_wall;
-	cputime64_t		prev_idle;
+	u64		prev_wall;
+	u64		prev_idle;
 	int			zero;
 } ____cacheline_aligned;
 
@@ -79,7 +79,7 @@ static int rackmeter_ignore_nice;
 /* This is copied from cpufreq_ondemand, maybe we should put it in
  * a common header somewhere
  */
-static inline cputime64_t get_cpu_idle_time(unsigned int cpu)
+static inline u64 get_cpu_idle_time(unsigned int cpu)
 {
 	u64 retval;
 
@@ -215,7 +215,7 @@ static void rackmeter_do_timer(struct work_struct *work)
 		container_of(work, struct rackmeter_cpu, sniffer.work);
 	struct rackmeter *rm = rcpu->rm;
 	unsigned int cpu = smp_processor_id();
-	cputime64_t cur_jiffies, total_idle_ticks;
+	u64 cur_jiffies, total_idle_ticks;
 	unsigned int total_ticks, idle_ticks;
 	int i, offset, load, cumm, pause;
 
