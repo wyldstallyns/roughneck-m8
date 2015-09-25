@@ -30,7 +30,7 @@ static inline void setup_cputime_one_jiffy(void) { }
 #include <asm/param.h>
 
 typedef u64 __nocast cputime_t;
-typedef u64 __nocast cputime64_t;
+typedef u64 __nocast u64;
 
 #ifdef __KERNEL__
 
@@ -85,7 +85,7 @@ static inline void setup_cputime_one_jiffy(void)
 	cputime_one_jiffy = jiffies_to_cputime(1);
 }
 
-static inline cputime64_t jiffies64_to_cputime64(const u64 jif)
+static inline u64 jiffies64_to_cputime64(const u64 jif)
 {
 	u64 ct;
 	u64 sec;
@@ -99,7 +99,7 @@ static inline cputime64_t jiffies64_to_cputime64(const u64 jif)
 	}
 	if (sec)
 		ct += (u64) sec * tb_ticks_per_sec;
-	return (__force cputime64_t) ct;
+	return (__force u64) ct;
 }
 
 static inline u64 cputime64_to_jiffies64(const cputime_t ct)
