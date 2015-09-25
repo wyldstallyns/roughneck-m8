@@ -21,9 +21,9 @@
 
 #ifdef arch_idle_time
 
-static cputime64_t get_idle_time(int cpu)
+static u64 get_idle_time(int cpu)
 {
-	cputime64_t idle;
+	u64 idle;
 
 	idle = kcpustat_cpu(cpu).cpustat[CPUTIME_IDLE];
 	if (cpu_online(cpu) && !nr_iowait_cpu(cpu))
@@ -31,9 +31,9 @@ static cputime64_t get_idle_time(int cpu)
 	return idle;
 }
 
-static cputime64_t get_iowait_time(int cpu)
+static u64 get_iowait_time(int cpu)
 {
-	cputime64_t iowait;
+	u64 iowait;
 
 	iowait = kcpustat_cpu(cpu).cpustat[CPUTIME_IOWAIT];
 	if (cpu_online(cpu) && nr_iowait_cpu(cpu))
