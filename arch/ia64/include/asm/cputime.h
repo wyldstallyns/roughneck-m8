@@ -27,7 +27,7 @@
 #include <asm/processor.h>
 
 typedef u64 __nocast cputime_t;
-typedef u64 __nocast cputime64_t;
+typedef u64 __nocast u64;
 
 #define cputime_one_jiffy		jiffies_to_cputime(1)
 
@@ -41,7 +41,7 @@ typedef u64 __nocast cputime64_t;
 #define cputime64_to_jiffies64(__ct)	\
 	((__force u64)(__ct) / (NSEC_PER_SEC / HZ))
 #define jiffies64_to_cputime64(__jif)	\
-	(__force cputime64_t)((__jif) * (NSEC_PER_SEC / HZ))
+	(__force u64)((__jif) * (NSEC_PER_SEC / HZ))
 
 /*
  * Convert cputime <-> microseconds
@@ -51,7 +51,7 @@ typedef u64 __nocast cputime64_t;
 #define usecs_to_cputime(__usecs)	\
 	(__force cputime_t)((__usecs) * NSEC_PER_USEC)
 #define usecs_to_cputime64(__usecs)	\
-	(__force cputime64_t)((__usecs) * NSEC_PER_USEC)
+	(__force u64)((__usecs) * NSEC_PER_USEC)
 
 /*
  * Convert cputime <-> seconds
